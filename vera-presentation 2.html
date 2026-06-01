@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meet Vera — A Beginner's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  /* ============ Vera Brand Tokens (from the app's index.css) ============ */
+  :root{
+    --bg: hsl(240 25% 8%);
+    --bg-soft: hsl(240 25% 11%);
+    --indigo: hsl(240 25% 15%);
+    --purple: hsl(248 75% 55%);
+    --purple-light: hsl(248 75% 65%);
+    --purple-dark: hsl(248 75% 45%);
+    --accent2: hsl(280 70% 60%);
+    --neutral: hsl(230 20% 97%);
+    --muted: hsl(230 15% 70%);
+    --card: hsl(240 22% 13%);
+    --border: hsl(240 20% 22%);
+    --gradient-primary: linear-gradient(135deg, hsl(248 75% 55%) 0%, hsl(280 70% 60%) 100%);
+    --gradient-ai: linear-gradient(135deg, hsl(248 75% 55% / .18) 0%, hsl(280 70% 60% / .18) 100%);
+    --shadow-glow: 0 0 60px hsl(248 75% 55% / .35);
+    --radius: 0.9rem;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--neutral);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* Animated aurora background */
+  .aurora{ position:fixed; inset:0; z-index:0; overflow:hidden; }
+  .aurora span{
+    position:absolute; border-radius:50%; filter:blur(90px); opacity:.35;
+    animation: float 18s ease-in-out infinite;
+  }
+  .aurora span:nth-child(1){ width:480px; height:480px; background:var(--purple); top:-120px; left:-100px; }
+  .aurora span:nth-child(2){ width:420px; height:420px; background:var(--accent2); bottom:-140px; right:-80px; animation-delay:-6s; }
+  .aurora span:nth-child(3){ width:360px; height:360px; background:var(--purple-dark); top:40%; left:55%; animation-delay:-12s; }
+  @keyframes float{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    33%{ transform:translate(60px,-40px) scale(1.1); }
+    66%{ transform:translate(-40px,50px) scale(.95); }
+  }
+
+  /* Progress bar */
+  .progress{ position:fixed; top:0; left:0; height:4px; width:0%; z-index:100;
+    background:var(--gradient-primary); box-shadow:0 0 12px var(--purple); transition:width .15s ease; }
+
+  /* Nav dots */
+  .dots{ position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:100;
+    display:flex; flex-direction:column; gap:14px; }
+  .dots a{ width:11px; height:11px; border-radius:50%; background:hsl(240 20% 35%);
+    transition:.3s; display:block; }
+  .dots a:hover{ transform:scale(1.3); }
+  .dots a.active{ background:var(--gradient-primary); box-shadow:0 0 10px var(--purple); transform:scale(1.25); }
+
+  /* Slides */
+  .slide{
+    position:relative; z-index:1; min-height:100vh; width:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:90px 24px; text-align:center;
+  }
+  .inner{ max-width:1040px; width:100%; }
+
+  /* Reveal animation */
+  .reveal{ opacity:0; transform:translateY(40px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.show{ opacity:1; transform:none; }
+  .d1{ transition-delay:.1s } .d2{ transition-delay:.25s } .d3{ transition-delay:.4s }
+  .d4{ transition-delay:.55s } .d5{ transition-delay:.7s } .d6{ transition-delay:.85s }
+
+  /* Typography */
+  h1{ font-size:clamp(2.6rem,7vw,5rem); font-weight:900; line-height:1.02; letter-spacing:-.03em; }
+  h2{ font-size:clamp(2rem,4.5vw,3.2rem); font-weight:800; letter-spacing:-.02em; margin-bottom:.4em; }
+  .sub{ font-size:clamp(1.05rem,2vw,1.4rem); color:var(--muted); font-weight:400; max-width:680px; margin:1.2rem auto 0; line-height:1.6; }
+  .grad{ background:linear-gradient(135deg,var(--purple-light),var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow{ display:inline-block; font-size:.8rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--purple-light); padding:.5em 1.1em; border:1px solid var(--border); border-radius:999px;
+    background:var(--gradient-ai); margin-bottom:1.5rem; }
+
+  /* Logo / fox */
+  .fox{ width:120px; height:120px; margin:0 auto 1.6rem; border-radius:30px;
+    background:var(--gradient-primary); display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--shadow-glow); animation:bob 4s ease-in-out infinite; }
+  .fox svg{ width:74px; height:74px; }
+  @keyframes bob{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+
+  /* Cards grid */
+  .grid{ display:grid; gap:20px; margin-top:2.4rem; }
+  .g2{ grid-template-columns:repeat(2,1fr); } .g3{ grid-template-columns:repeat(3,1fr); }
+  @media(max-width:760px){ .g2,.g3{ grid-template-columns:1fr; } }
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:26px 22px; text-align:left; transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .card:hover{ transform:translateY(-8px); border-color:var(--purple); box-shadow:0 18px 40px -18px hsl(248 75% 55% / .6); }
+  .card .ico{ width:52px; height:52px; border-radius:14px; background:var(--gradient-ai);
+    display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:14px; }
+  .card h3{ font-size:1.18rem; font-weight:700; margin-bottom:.4rem; }
+  .card p{ color:var(--muted); font-size:.96rem; line-height:1.55; }
+
+  /* Agent loop diagram */
+  .loop{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:14px; margin-top:2.6rem; }
+  .node{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 24px;
+    font-weight:700; position:relative; min-width:150px; }
+  .node small{ display:block; font-weight:400; color:var(--muted); font-size:.82rem; margin-top:4px; }
+  .node.lit{ border-color:var(--purple); box-shadow:0 0 24px hsl(248 75% 55% / .4); }
+  .arrow{ font-size:1.6rem; color:var(--purple-light); animation:pulseA 2s ease-in-out infinite; }
+  @keyframes pulseA{ 0%,100%{opacity:.4} 50%{opacity:1} }
+
+  /* Before/after */
+  .ba{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:2.4rem; text-align:left; }
+  @media(max-width:760px){ .ba{ grid-template-columns:1fr } }
+  .ba .col{ border-radius:var(--radius); padding:26px; border:1px solid var(--border); }
+  .ba .bad{ background:hsl(0 40% 14% / .5); }
+  .ba .good{ background:var(--gradient-ai); border-color:var(--purple); }
+  .ba h4{ font-size:1.1rem; margin-bottom:1rem; display:flex; gap:8px; align-items:center; }
+  .ba li{ list-style:none; padding:8px 0; color:var(--muted); display:flex; gap:10px; align-items:flex-start; }
+  .ba li b{ color:var(--neutral); font-weight:600; }
+
+  /* Roadmap */
+  .road{ text-align:left; margin-top:2.2rem; }
+  .road .row{ display:flex; gap:18px; align-items:flex-start; padding:18px 0; border-bottom:1px solid var(--border); }
+  .road .tag{ flex-shrink:0; font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:.45em .9em; border-radius:8px; background:var(--gradient-primary); color:#fff; min-width:118px; text-align:center; }
+  .road .tag.soon{ background:hsl(248 30% 30%); } .road .tag.later{ background:hsl(240 20% 22%); }
+  .road .txt b{ font-weight:700; } .road .txt p{ color:var(--muted); font-size:.95rem; margin-top:3px; }
+
+  /* Stack chips */
+  .chips{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:2rem; }
+  .chip{ padding:.55em 1.1em; border:1px solid var(--border); border-radius:999px; font-size:.9rem;
+    font-weight:500; background:var(--card); transition:.3s; }
+  .chip:hover{ border-color:var(--purple); color:var(--purple-light); }
+
+  .scroll-hint{ position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+    color:var(--muted); font-size:.85rem; animation:bob 2s ease-in-out infinite; }
+
+  .btn{ display:inline-block; margin-top:2rem; padding:.9em 2.2em; border-radius:999px;
+    background:var(--gradient-primary); color:#fff; font-weight:700; text-decoration:none;
+    box-shadow:var(--shadow-glow); transition:transform .3s; }
+  .btn:hover{ transform:scale(1.05); }
+  .footnote{ color:var(--muted); font-size:.85rem; margin-top:2.5rem; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="aurora"><span></span><span></span><span></span></div>
+
+<nav class="dots" id="dots">
+  <a href="#s1" class="active"></a><a href="#s2"></a><a href="#s3"></a>
+  <a href="#s4"></a><a href="#s5"></a><a href="#s6"></a><a href="#s7"></a><a href="#s8"></a>
+</nav>
+
+<!-- 1. HERO -->
+<section class="slide" id="s1">
+  <div class="inner">
+    <div class="fox reveal d1 show">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M20 22 L34 40 Q50 34 66 40 L80 22 L74 52 Q50 72 26 52 Z"/>
+        <path d="M26 52 Q50 70 74 52"/>
+        <circle cx="40" cy="50" r="2.5" fill="#fff" stroke="none"/>
+        <circle cx="60" cy="50" r="2.5" fill="#fff" stroke="none"/>
+      </svg>
+    </div>
+    <div class="eyebrow reveal d2 show">AI-Powered Workspace</div>
+    <h1 class="reveal d3 show">Meet <span class="grad">Vera</span></h1>
+    <p class="sub reveal d4 show">Your AI assistant that manages clients, writes emails, schedules meetings, and prioritizes your day — so you can focus on the work that matters.</p>
+    <p class="footnote reveal d5 show">A beginner-friendly guide · scroll to explore ↓</p>
+  </div>
+  <div class="scroll-hint">scroll ↓</div>
+</section>
+
+<!-- 2. THE PROBLEM -->
+<section class="slide" id="s2">
+  <div class="inner">
+    <div class="eyebrow reveal">The Problem</div>
+    <h2 class="reveal d1">Running a business is <span class="grad">a lot of juggling</span></h2>
+    <p class="sub reveal d2">A Virtual Assistant helping 10 clients spends most of the day not doing real work — but switching between apps just to keep everything organized.</p>
+    <div class="grid g3">
+      <div class="card reveal d2"><div class="ico">📧</div><h3>Endless email</h3><p>Replying to the same kinds of messages over and over again.</p></div>
+      <div class="card reveal d3"><div class="ico">📅</div><h3>Booking chaos</h3><p>Back-and-forth to find a time that works for a meeting.</p></div>
+      <div class="card reveal d4"><div class="ico">🗂️</div><h3>Scattered tools</h3><p>A CRM here, a calendar there, notes somewhere else. 8 tabs open.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. THE SOLUTION -->
+<section class="slide" id="s3">
+  <div class="inner">
+    <div class="eyebrow reveal">The Solution</div>
+    <h2 class="reveal d1">Vera puts it <span class="grad">all in one place</span></h2>
+    <p class="sub reveal d2">Instead of 8 apps, you get one workspace. And instead of doing the busywork yourself, an AI assistant does it <i>for</i> you.</p>
+    <div class="grid g3">
+      <div class="card reveal d2"><div class="ico">🤖</div><h3>AI Automation</h3><p>Automated email replies, smart scheduling, and task prioritization.</p></div>
+      <div class="card reveal d3"><div class="ico">👥</div><h3>Client Management</h3><p>Every contact, project, and conversation organized in one CRM.</p></div>
+      <div class="card reveal d4"><div class="ico">🔒</div><h3>Secure &amp; Private</h3><p>Encryption, GDPR compliance, and safe app integrations.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. WHAT MAKES IT SPECIAL — THE AGENT -->
+<section class="slide" id="s4">
+  <div class="inner">
+    <div class="eyebrow reveal">What Makes It Special</div>
+    <h2 class="reveal d1">It doesn't just suggest — <span class="grad">it acts</span></h2>
+    <p class="sub reveal d2">Most AI tools give you advice. Vera's "agent" actually does the task: it thinks, takes a real action, checks the result, and repeats — like a smart helper that follows through.</p>
+    <div class="loop">
+      <div class="node lit reveal d2">💭 Think<small>Understand what you need</small></div>
+      <span class="arrow reveal d3">→</span>
+      <div class="node reveal d3">⚡ Act<small>Create a task, send a reply…</small></div>
+      <span class="arrow reveal d4">→</span>
+      <div class="node reveal d4">👀 Observe<small>Check the result</small></div>
+      <span class="arrow reveal d5">↻</span>
+      <div class="node reveal d5">✅ Resolve<small>Finish or keep going</small></div>
+    </div>
+    <p class="sub reveal d5" style="margin-top:2rem;">And because it can take real actions, Vera asks for your <b style="color:var(--neutral)">approval</b> before anything sensitive — you always stay in control.</p>
+  </div>
+</section>
+
+<!-- 5. BEFORE / AFTER -->
+<section class="slide" id="s5">
+  <div class="inner">
+    <div class="eyebrow reveal">A Day in the Life</div>
+    <h2 class="reveal d1">Before Vera vs. <span class="grad">With Vera</span></h2>
+    <div class="ba">
+      <div class="col bad reveal d2">
+        <h4>😩 Before</h4>
+        <ul>
+          <li>⏱️ <span><b>30 min</b> writing routine email replies</span></li>
+          <li>📞 <span><b>6 messages</b> back-and-forth to book one call</span></li>
+          <li>📝 <span>Manually updating notes after every client chat</span></li>
+          <li>🤯 <span>Forgetting to follow up with a client</span></li>
+        </ul>
+      </div>
+      <div class="col good reveal d3">
+        <h4>✨ With Vera</h4>
+        <ul>
+          <li>⚡ <span>AI <b>drafts the reply</b>, you just hit send</span></li>
+          <li>📅 <span>Meeting <b>scheduled automatically</b> with calendar sync</span></li>
+          <li>🧠 <span>Notes &amp; tasks <b>updated for you</b> after each interaction</span></li>
+          <li>🔔 <span>Vera <b>reminds and follows up</b> on your behalf</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. UNDER THE HOOD -->
+<section class="slide" id="s6">
+  <div class="inner">
+    <div class="eyebrow reveal">Under the Hood</div>
+    <h2 class="reveal d1">Built on a <span class="grad">solid foundation</span></h2>
+    <p class="sub reveal d2">For the curious — here's the technology that powers Vera, chosen to be fast, scalable, and reliable.</p>
+    <div class="chips">
+      <span class="chip reveal d2">⚛️ React + TypeScript</span>
+      <span class="chip reveal d2">⚡ Vite</span>
+      <span class="chip reveal d3">🎨 Tailwind + shadcn/ui</span>
+      <span class="chip reveal d3">🟢 Node.js + Express</span>
+      <span class="chip reveal d3">🍃 MongoDB</span>
+      <span class="chip reveal d4">🧠 OpenRouter AI</span>
+      <span class="chip reveal d4">📨 BullMQ + Redis</span>
+      <span class="chip reveal d4">💳 Stripe</span>
+      <span class="chip reveal d5">🔗 Google · LinkedIn · Zoom</span>
+      <span class="chip reveal d5">📞 Twilio</span>
+    </div>
+    <p class="footnote reveal d6">Background workers run the AI so the app always feels snappy · multi-tenant workspaces support whole teams.</p>
+  </div>
+</section>
+
+<!-- 7. ROADMAP -->
+<section class="slide" id="s7">
+  <div class="inner">
+    <div class="eyebrow reveal">For the Dev Team</div>
+    <h2 class="reveal d1">What could make Vera <span class="grad">even better</span></h2>
+    <div class="road">
+      <div class="row reveal d2"><span class="tag">Quick win</span><div class="txt"><b>Fix repo hygiene</b><p>Resolve the merge conflict left in <code>README.md</code> and add a one-command dev setup.</p></div></div>
+      <div class="row reveal d2"><span class="tag">Quick win</span><div class="txt"><b>Agent activity feed &amp; undo</b><p>Let users see everything the AI did, approve pending actions, and undo mistakes — the #1 trust booster.</p></div></div>
+      <div class="row reveal d3"><span class="tag soon">Feature</span><div class="txt"><b>Invoicing &amp; time tracking</b><p>Stripe is already wired in — help VAs actually get paid and close the money loop.</p></div></div>
+      <div class="row reveal d3"><span class="tag soon">Feature</span><div class="txt"><b>Mobile app / PWA + client portal</b><p>VAs work on the go; clients get a branded space to submit requests.</p></div></div>
+      <div class="row reveal d4"><span class="tag later">AI depth</span><div class="txt"><b>Memory &amp; a proactive agent</b><p>Learn each user's tone and nudge them — "you haven't followed up with Client X in 14 days."</p></div></div>
+      <div class="row reveal d4"><span class="tag later">Reliability</span><div class="txt"><b>Tests, CI/CD &amp; AI cost controls</b><p>Cover the agent &amp; OAuth flows, add deploy gates, and track LLM spend per workspace.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. CLOSE -->
+<section class="slide" id="s8">
+  <div class="inner">
+    <div class="fox reveal show" style="width:90px;height:90px;">
+      <svg viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M20 22 L34 40 Q50 34 66 40 L80 22 L74 52 Q50 72 26 52 Z"/>
+        <path d="M26 52 Q50 70 74 52"/>
+        <circle cx="40" cy="50" r="2.5" fill="#fff" stroke="none"/>
+        <circle cx="60" cy="50" r="2.5" fill="#fff" stroke="none"/>
+      </svg>
+    </div>
+    <h2 class="reveal d1">One workspace. <span class="grad">One smart assistant.</span></h2>
+    <p class="sub reveal d2">Vera turns the scattered, manual side of running a service business into something an AI quietly handles for you — safely, and with you always in control.</p>
+    <a href="#s1" class="btn reveal d3">↑ Back to start</a>
+    <p class="footnote reveal d4">Vera AI Flow · brand colors &amp; Inter font from the live app · a beginner's guide</p>
+  </div>
+</section>
+
+<script>
+  // Scroll progress + reveal-on-scroll + active dots
+  const progress = document.getElementById('progress');
+  const reveals = document.querySelectorAll('.reveal');
+  const dots = document.querySelectorAll('.dots a');
+  const slides = document.querySelectorAll('.slide');
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold:.12 });
+  reveals.forEach(r=>io.observe(r));
+
+  const activeIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id;
+        dots.forEach(d=>d.classList.toggle('active', d.getAttribute('href')==='#'+id));
+      }
+    });
+  }, { threshold:.5 });
+  slides.forEach(s=>activeIO.observe(s));
+
+  window.addEventListener('scroll', ()=>{
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = pct + '%';
+  });
+
+  // Animate the agent-loop nodes lighting up in sequence
+  const loopNodes = document.querySelectorAll('#s4 .node');
+  let li = 0;
+  setInterval(()=>{
+    loopNodes.forEach(n=>n.classList.remove('lit'));
+    loopNodes[li % loopNodes.length].classList.add('lit');
+    li++;
+  }, 1100);
+</script>
+</body>
+</html>
