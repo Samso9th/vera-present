@@ -317,6 +317,8 @@
   const reveals = document.querySelectorAll('.reveal');
   const dots = document.querySelectorAll('.dots a');
   const slides = document.querySelectorAll('.slide');
+  const slideArr = Array.from(slides);
+  let currentIndex = 0;
 
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
@@ -328,6 +330,7 @@
       if(e.isIntersecting){
         const id = e.target.id;
         dots.forEach(d=>d.classList.toggle('active', d.getAttribute('href')==='#'+id));
+        currentIndex = slideArr.indexOf(e.target);
       }
     });
   }, { threshold:.5 });
@@ -337,6 +340,19 @@
     const h = document.documentElement;
     const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
     progress.style.width = pct + '%';
+  });
+
+  // Arrow Up/Down jump between sections instead of scrolling.
+  function goToSection(i){
+    i = Math.max(0, Math.min(slideArr.length - 1, i));
+    currentIndex = i;
+    slideArr[i].scrollIntoView({ behavior:'smooth' });
+  }
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowDown' || e.key === 'PageDown'){ e.preventDefault(); goToSection(currentIndex + 1); }
+    else if(e.key === 'ArrowUp' || e.key === 'PageUp'){ e.preventDefault(); goToSection(currentIndex - 1); }
+    else if(e.key === 'Home'){ e.preventDefault(); goToSection(0); }
+    else if(e.key === 'End'){ e.preventDefault(); goToSection(slideArr.length - 1); }
   });
 
   // Animate the agent-loop nodes lighting up in sequence
